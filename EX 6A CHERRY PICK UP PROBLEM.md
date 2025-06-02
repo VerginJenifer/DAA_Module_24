@@ -14,11 +14,11 @@ When passing through a path cell containing a cherry, you pick it up, and the ce
 
 
 ## Algorithm
-1. 
-2. 
-3. 
-4.  
-5.   
+1. Define a recursive function dp(k) that calculates max cherries collected starting from row k.
+2. At the last row, return the cherries picked by two robots at all column pairs (count once if both on same cell).
+3. For each row k, compute maximum cherries for all pairs of robot positions (i, j).
+4. For each possible move of both robots (left, down, right), update ans[i][j] with max cherries collected including current row.
+5. Return dp(0)[0][COL_NUM-1], the max cherries starting from row 0 with robots at columns 0 and last.  
 
 ## Program:
 ```
@@ -27,12 +27,44 @@ To implement the program for Cherry pickup problem.
 
 
 Developed by: 
-Register Number:  
+Register Number:
+class Solution(object):
+    def cherryPickup(self, grid):
+        def dp(k):
+            
+            if k == ROW_NUM - 1:
+                return [[grid[-1][i] if i == j else grid[-1][i] + grid[-1][j] for j in range(COL_NUM)]
+                        for i in range(COL_NUM)]
+            row = grid[k]
+            ans = [[0] * COL_NUM for i in range(COL_NUM)]
+            next_dp = dp(k + 1)
+            for i in range(COL_NUM):
+                for j in range(i, COL_NUM):
+                    for di in [-1, 0, 1]:
+                        for dj in [-1, 0, 1]:
+                            if 0 <= i + di < COL_NUM and 0 <= j + dj < COL_NUM:
+                                if i == j:
+                                    ans[i][j] = max(ans[i][j], next_dp[i + di][j + dj] + row[i])
+                                else:
+                                    ans[i][j] = max(ans[i][j], next_dp[i + di][j + dj] + row[i] + row[j])
+            return ans
+            
+        ROW_NUM = len(grid)
+        COL_NUM = len(grid[0])
+        return dp(0)[0][COL_NUM - 1]
+        
+grid=[[3,1,1],
+      [2,5,1],
+      [1,5,5],
+      [2,1,1]]
+ob=Solution()
+print(ob.cherryPickup(grid))
 */
 ```
 
 ## Output:
 
+![image](https://github.com/user-attachments/assets/ed406dbb-a57a-482b-8b2d-80f068654ff6)
 
 
 ## Result:
